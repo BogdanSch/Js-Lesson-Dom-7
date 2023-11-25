@@ -1,34 +1,34 @@
 "use strict";
 
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-  equals(otherPoint) {
-    return this.x === otherPoint.x && this.y === otherPoint.y;
-  }
-}
-
-let treasure = new Point(100, 200);
-
-console.log(treasure.equals(new Point(100, 200)));
+import { Point } from "./point.js";
 
 const wrap = document.querySelector(".wrap");
 const map = wrap.querySelector(".map");
 const coords = document.querySelector(".coords");
+const maxFoundTreasureDistance = 30;
 
 wrap.style.width = `${map.width}px`;
 wrap.style.height = `${map.height}px`;
 
+let treasure = new Point(
+  Math.floor(Math.random() * map.width),
+  Math.floor(Math.random() * map.height)
+);
+
+console.log(treasure.toString());
+
+function getPointDistance(userPoint) {
+  let distanceX = userPoint.x - treasure.x;
+  let distanceY = userPoint.y - treasure.y;
+  return Math.sqrt(distanceX ** 2 + distanceY ** 2);
+}
+
 map.addEventListener("mousemove", (event) => {
-  let x = event.offsetX;
-  let y = event.offsetY;
-  let point = new Point(x, y);
+  let point = new Point(event.offsetX, event.offsetY);
 
-  coords.value = `x: ${x}, y: ${y}`;
+  coords.value = point.toString();
 
-  if (treasure.equals(point)) {
-    alert("Win");
+  if (getPointDistance(point) <= maxFoundTreasureDistance) {
+    alert("You found the treasure! Good job!");
   }
 });
